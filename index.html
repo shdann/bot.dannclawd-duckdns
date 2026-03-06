@@ -56,13 +56,26 @@
             color: #58a6ff;
             text-decoration: none;
         }
+        .admin-badge {
+            background: #f0f6fc;
+            color: #161b22;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="admin-badge">🔐 Admin Access Only</div>
         <h1>🤖 Bot Login</h1>
         <p>Sign in with GitHub to access bot interface</p>
-        <a href="https://github.com/login/oauth/authorize?client_id=Ov23liF73OkKXlXOOw7I&redirect_uri=https://shdann.github.io/bot/&scope=read:user%20user:email" class="login-btn">
+        <a href="https://github.com/login/oauth/authorize?client_id=Ov23liF73OkKXlXOOw7I&redirect_uri=https://shdann.github.io/bot.dannclawd-duckdns/callback.html&scope=read:user%20user:email&state=eyJ1c2VubmFpbCI6InNoZG9vQG1haWlsIn0ifQ==" class="login-btn">
             Sign in with GitHub
         </a>
         <div class="powered-by">
