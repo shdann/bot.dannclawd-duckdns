@@ -24,31 +24,23 @@
             width: 90%;
             border: 1px solid #30363d;
         }
-        h1 {
-            color: #f0f6fc;
-            margin-bottom: 20px;
-        }
-        .status {
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
         .success {
-            background: #238636;
-            color: white;
-        }
-        .loading {
-            background: #eab308;
-            color: #161b22;
-        }
-        .error {
-            background: #ef4444;
-            color: white;
+            color: #238636;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
         .info {
             color: #8b949e;
             margin-bottom: 20px;
+        }
+        .token {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin: 20px 0;
         }
         .email {
             color: #58a6ff;
@@ -56,52 +48,27 @@
             font-size: 16px;
             margin: 20px 0;
         }
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #238636;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-top: 20px;
-        }
-        .btn:hover {
-            background: #2ea043;
-        }
-        .btn:disabled {
-            background: #6b7280;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔐 OAuth Callback</h1>
+        <div class="success">✓</div>
+        <h1>Authorization Successful</h1>
+        <p class="info">You have authorized the AUE-DB bot.</p>
         
-        <div id="status" class="status loading">
-            Processing...
-        </div>
+        <p><strong>Authorized as:</strong><br>
+        <span id="email" class="email">Loading...</span></p>
         
-        <p id="info" class="info"></p>
+        <p><strong>GitHub Authorization Code:</strong></p>
+        <div class="token" id="token">Loading...</div>
         
-        <p id="email-section" style="display: none;">
-            <strong>Your GitHub email:</strong><br>
-            <span id="email" class="email">Loading...</span>
+        <p class="info" style="margin-top: 30px;">
+            <em>Code stored in browser localStorage.</em>
         </p>
-        
-        <p id="verify-section" style="display: none;">
-            <strong>Verify this is your email:</strong><br>
-            shdann@gmail.com
-        </p>
-        
-        <a id="continue-btn" href="#" style="display: none;" class="btn">
-            Continue to Bot Interface →
-        </a>
     </div>
 
     <script>
         const ADMIN_EMAIL = 'shdann@gmail.com';
-        const BOT_URL = 'https://t.me/shdann_vk_bot'; // Update with actual bot URL
 
         // Extract code and state from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -109,33 +76,24 @@
         const state = urlParams.get('state');
 
         if (!code) {
-            document.getElementById('status').textContent = 'Error';
-            document.getElementById('status').className = 'status error';
-            document.getElementById('info').textContent = 'No authorization code found in URL.';
-            return;
-        }
+            document.getElementById('email').textContent = 'Error';
+            document.getElementById('token').textContent = 'No authorization code found in URL.';
+            document.body.style.background = '#2d0a0a';
+        } else {
+            // Display admin email
+            document.getElementById('email').textContent = ADMIN_EMAIL;
 
-        // Exchange code for access token (requires client_secret)
-        // NOTE: For client-side OAuth, we need a backend or use implicit flow
-        // For simplicity, we'll extract email using the code if possible,
-        // or redirect to a backend that handles verification
-        
-        document.getElementById('status').textContent = 'Authorization Code Received';
-        document.getElementById('status').className = 'status success';
-        document.getElementById('info').textContent = 'Exchange the code below for your access token:';
-        document.getElementById('email-section').style.display = 'block';
-        document.getElementById('email').textContent = ADMIN_EMAIL;
-        document.getElementById('verify-section').style.display = 'block';
-        document.getElementById('code-section').innerHTML = '<strong>Authorization Code:</strong><br><code style="word-break: break-all; background: #0d1117; padding: 10px; border-radius: 4px; display: inline-block; margin: 10px 0;">' + code + '</code>';
-        
-        // Store code in localStorage for bot interface
-        localStorage.setItem('github_auth_code', code);
-        
-        // Enable continue button after 3 seconds (manual verification)
-        setTimeout(() => {
-            document.getElementById('continue-btn').href = BOT_URL + '?auth=' + code;
-            document.getElementById('continue-btn').style.display = 'inline-block';
-        }, 3000);
+            // Display authorization code
+            document.getElementById('token').textContent = code;
+
+            // Store code in localStorage
+            localStorage.setItem('github_auth_code', code);
+            localStorage.setItem('github_auth_timestamp', Date.now());
+            
+            // Log for debugging
+            console.log('GitHub OAuth Code:', code);
+            console.log('Admin Email:', ADMIN_EMAIL);
+        }
     </script>
 </body>
 </html>
